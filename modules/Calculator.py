@@ -72,8 +72,8 @@ class Calculator:
 				temp.append(res)
 				# print("{0} {2} {1}".format(b, a, exc[i]))
 			i += 1
-		print("{0:g}".format(res))
-		self.__res = res
+		self.__res = temp.pop()
+		print("{0:g}".format(self.__res))
 	def __isDelimeter(self):
 		pass
 	def __isOperator(self, c):
@@ -127,25 +127,3 @@ class Calculator:
 			print(err)
 			return 0
 		return re.sub(r' ', '', exc)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

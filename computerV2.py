@@ -5,6 +5,7 @@ import readline
 import re
 
 from modules.Calculator import *
+from modules.ComplexNum import *
 
 class General:
 	def __init__(self):
@@ -21,9 +22,13 @@ class General:
 				self.__pars()
 		print("\nThx for wasted time!")
 	def __pars(self):
-		self.__comand = re.sub(r'\s', '', self.__comand).lower()
-		# print(self.__comand)
-		lst = Calculator(self.__comand)
+		# self.__comand = re.sub(r'\s', '', self.__comand).lower()
+		# lst = Calculator(self.__comand)
+		# tmp2 = ComplexNum(float(self.__comand), 0)
+		print("orig = {0} my = {1}".format(
+			(complex(1,0) / complex(float(self.__comand), 1)),
+			(ComplexNum(1,0) + ComplexNum(float(self.__comand), 1))
+			))
 
 def main():
 	g = General()
