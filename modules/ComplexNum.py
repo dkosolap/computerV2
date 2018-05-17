@@ -1,4 +1,5 @@
 import re
+from multimethod import multimethod
 
 class ComplexNum(object):
 	"""docstring for ComplexNum"""
@@ -23,14 +24,55 @@ class ComplexNum(object):
 			return "{0:g}".format(self.re)
 		else:
 			return "{0:g}{1:+g}i".format(self.re, self.im)
-	def __add__(self, other):
+#	Object | Object
+	@multimethod
+	def __add__(self: object, other: object):
 		return ComplexNum((self.re + other.re), (self.im + other.im))
-	def __sub__(self, other):
+	@multimethod
+	def __sub__(self: object, other: object):
 		return ComplexNum((self.re - other.re), (self.im - other.im))
-	def __mul__(self, other):
-		return ComplexNum((self.re * other.re), (self.im * other.im))
-	def __truediv__(self, other):
-		return ComplexNum((self.re / other.re), (self.im / other.im))
-	# def __mod__(self, other):
+	@multimethod
+	def __mul__(self: object, other: object):
+		a = self.re * other.re
+		b = self.re * other.im
+		c = self.im * other.re
+		d = -(self.im * other.im)
+		return ComplexNum((a + d), (b + c))
+	@multimethod
+	def __truediv__(self: object, other: object):
+		neg = other * ComplexNum(-1, 0)
+		neg.re *= -1
+		top = self * neg
+		bottom = other * neg
+		if not bottom.im:
+			bottom.im = bottom.re
+		return ComplexNum(top.re / bottom.re, top.im / bottom.im)
+#	Object | float
+	@multimethod
+	def __add__(self: object, other: float):
+		return ComplexNum((self.re + other), self.im)
+	@multimethod
+	def __sub__(self: object, other: float):
+		return ComplexNum((self.re - other), self.im)
+	@multimethod
+	def __mul__(self: object, other: float):
+		return ComplexNum((self.re * other), (self.im * other))
+	@multimethod
+	def __truediv__(self: object, other: float):
+		try:
+			re = self.re / other
+			im = self.im / other if self.im else 0
+		except ZeroDivisionError:
+			raise
+		return ComplexNum(re, im)
+#	Float | Object
+	def __radd__(self: object, other: float):
+		return ComplexNum((self.re + other), self.im)
+	def __rsub__(self: object, other: float):
+		return ComplexNum((other - self.re), -self.im)
+	def __rmul__(self: object, other: float):
+		return ComplexNum((self.re * other), (self.im * other))
+	def __rtruediv__(self: object, other: float):
+		return ComplexNum(other, 0) / self
 	# def __pow__(self, other):
 		# pass

@@ -1,0 +1,7 @@
+pip-selfcheck.json
+bin
+lib
+lib64
+models/__*
+share
+pyvenv.cfg

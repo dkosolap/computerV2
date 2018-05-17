@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/env python3.5
 
 import sys
 import readline
@@ -26,8 +26,8 @@ class General:
 		# lst = Calculator(self.__comand)
 		# tmp2 = ComplexNum(float(self.__comand), 0)
 		print("orig = {0} my = {1}".format(
-			(complex(1,0) / complex(float(self.__comand), 1)),
-			(ComplexNum(1,0) + ComplexNum(float(self.__comand), 1))
+			(float(self.__comand) / complex(1,3)),
+			(float(self.__comand) / ComplexNum(1,3))
 			))
 
 def main():
