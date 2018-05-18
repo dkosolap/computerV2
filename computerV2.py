@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.5
+#!/usr/bin/env python3
 
 import sys
 import readline
@@ -22,13 +22,13 @@ class General:
 				self.__pars()
 		print("\nThx for wasted time!")
 	def __pars(self):
-		# self.__comand = re.sub(r'\s', '', self.__comand).lower()
-		# lst = Calculator(self.__comand)
+		self.__comand = re.sub(r'\s', '', self.__comand).lower()
+		lst = Calculator(self.__comand)
 		# tmp2 = ComplexNum(float(self.__comand), 0)
-		print("orig = {0} my = {1}".format(
-			(float(self.__comand) / complex(1,3)),
-			(float(self.__comand) / ComplexNum(1,3))
-			))
+		# print("orig = {0} my = {1}".format(
+		# 	(complex(float(self.__comand), 2.3) / complex(1,3)),
+		# 	(ComplexNum(float(self.__comand), 2.3) / ComplexNum(1,3))
+		# 	))
 
 def main():
 	g = General()

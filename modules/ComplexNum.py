@@ -2,15 +2,17 @@ import re
 from multimethod import multimethod
 
 class ComplexNum(object):
-	"""docstring for ComplexNum"""
-	"""	abs - modul of comlex number"""
-	"""	__str__ - overload output"""
-	"""	__add__ - overload addition (x + y)"""
-	"""	__sub__ - overload subtraction (x - y)"""
-	"""	__mul__ - overload multiplication (x * y)"""
-	"""	__truediv__ - overload division (x / y)"""
-	"""	__mod__ - overload % (x % y)"""
-	"""	__pow__ - overload ** (x ** y)"""
+	"""
+		docstring for ComplexNum
+		abs - modul of comlex number
+		__str__ - overload output
+		__add__ - overload addition (x + y)
+		__sub__ - overload subtraction (x - y)
+		__mul__ - overload multiplication (x * y)
+		__truediv__ - overload division (x / y)
+		__mod__ - overload % (x % y)
+		__pow__ - overload ** (x ** y)
+	"""
 
 	def __init__(self, re = 1, im = 0):
 		self.re = re

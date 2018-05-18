@@ -2,41 +2,66 @@ import re
 
 class Calculator:
 	def __init__(self, exc):
-		self.__res = None
+		self.__res = None\
+		# self.__stackNum = []
+		# self.__stackOper = []
 		if not self.__validation(exc):
 			return
-		self.__counting(self.__getExpression(exc))
+		self.__getExpression(exc)
+		# self.__counting(self.__getExpression(exc))
+		
+
+
+
+
+
 	def __getExpression(self, exc):
-		operStack = []
-		i = 0
-		lenth = len(exc)
-		output = ''
-		while i < lenth:
-			if exc[i].isdigit():
-				num = ''
-				while i < lenth and (exc[i].isdigit() or exc[i] == '.'):
-					output += exc[i]
-					i += 1
-				output += ' '
-				i -= 1
-			if self.__isOperator(exc[i]):
-				if exc[i] == '(':
-					operStack.append(exc[i])
-				elif exc[i] == ')':
-					s = operStack.pop()
-					while s != '(':
-						output += s + ' '
-						s = operStack.pop()
-				else:
-					if len(operStack) > 0:
-						if self.__getPriority(exc[i]) <= self.__getPriority(operStack[-1]):
-							output += operStack.pop()
-					operStack.append(exc[i])
-			i += 1
-		while len(operStack) > 0:
-			output += operStack.pop() + ' '
-		# print(output)
-		return output
+		# Search complexNum and numbers	# (\d+(?:\.\d+)?(?:[\+\-])?(?:\d+(?:\.\d+)?)?[iI])|(\d+(?:\.\d+)?)
+										# ((?:\d+(?:\.\d+)?(?:[\+\-])?(?:(?:\-)?\d+(?:\.\d+)?)?[iI])|(?:\d+(?:\.\d+)?))
+
+		# Search operators	# ([\+\-\*\/\^\%\(\)](?!\d+(?:\.\d+)?[iI]))
+							# ([\+\*\/\^\%\(\)]|([\-](?<=\()))
+
+		# 10+-5.5+-5+(-48-42)+5^-2-42+10.2i
+		numbers = re.findall(r'((?:\d+(?:\.\d+)?(?:[\+\-])?(?:(?:\-)?\d+(?:\.\d+)?)?[iI])|(?:(?:(?<=[\(\*\/\%\^\+])\-)?\d+(?:\.\d+)?))', exc)
+		operators = re.findall(r'([\+\-\*\/\^\%\(\)](?!\d+(?:\.\d+)?[iI]))', exc)
+		output = []
+		print(numbers, operators)
+	# def __getExpression(self, exc):
+	# 	operStack = []
+	# 	i = 0
+	# 	lenth = len(exc)
+	# 	output = ''
+	# 	while i < lenth:
+	# 		if exc[i].isdigit():
+	# 			num = ''
+	# 			while i < lenth and (exc[i].isdigit() or exc[i] == '.'):
+	# 				output += exc[i]
+	# 				i += 1
+	# 			output += ' '
+	# 			i -= 1
+	# 		if self.__isOperator(exc[i]):
+	# 			if exc[i] == '(':
+	# 				operStack.append(exc[i])
+	# 			elif exc[i] == ')':
+	# 				s = operStack.pop()
+	# 				while s != '(':
+	# 					output += s + ' '
+	# 					s = operStack.pop()
+	# 			else:
+	# 				if len(operStack) > 0:
+	# 					if self.__getPriority(exc[i]) <= self.__getPriority(operStack[-1]):
+	# 						output += operStack.pop()
+	# 				operStack.append(exc[i])
+	# 		i += 1
+	# 	while len(operStack) > 0:
+	# 		output += operStack.pop() + ' '
+	# 	print(output)
+	# 	return output
+
+
+
+
 	def __counting(self, exc):
 		res = 0
 		temp = []
