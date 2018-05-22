@@ -21,10 +21,12 @@ class Calculator:
 
 		# Search operators	# ([\+\-\*\/\^\%\(\)](?!\d+(?:\.\d+)?[iI]))
 							# ([\+\*\/\^\%\(\)]|([\-](?<=\()))
+							# (?<![\(\*\/\%\^\+])[\-]
+							# ((?<![\(\*\/\%\^\+])[\-](?!\d+(?:\.\d+)?[iI])|[\+\/\*\^\%\(\)])
 
 		# 10+-5.5+-5+(-48-42)+5^-2-42+10.2i
 		numbers = re.findall(r'((?:\d+(?:\.\d+)?(?:[\+\-])?(?:(?:\-)?\d+(?:\.\d+)?)?[iI])|(?:(?:(?<=[\(\*\/\%\^\+])\-)?\d+(?:\.\d+)?))', exc)
-		operators = re.findall(r'([\+\-\*\/\^\%\(\)](?!\d+(?:\.\d+)?[iI]))', exc)
+		operators = re.findall(r'((?<![\(\*\/\%\^\+])[\-](?!\d+(?:\.\d+)?[iI])|[\+\/\*\^\%\(\)])', exc)
 		output = []
 		print(numbers, operators)
 	# def __getExpression(self, exc):
@@ -132,7 +134,8 @@ class Calculator:
 			if not check:
 				raise SyntaxError("wrong amount numbers")
 		def operWithotPair(exc):
-			check = re.findall(r'[\+\-\\\*\^\%]{2,}', exc)
+			# check = re.findall(r'[\+\-\\\*\^\%]{2,}', exc)
+			check = re.findall(r'[\+\\\*\^\%]]{2,}|(?:\--)|(?:[\+\-\\\*\^\%]{3,})', exc)
 			if check:
 				raise SyntaxError("wrong amount operator")
 			check = re.findall(r'[\*\-\+\^\*\\\%]$', exc)
