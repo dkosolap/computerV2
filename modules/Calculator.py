@@ -1,23 +1,16 @@
 import re
+from modules.ComplexNum import *
 
 class Calculator:
 	def __init__(self, exc):
-		self.__res = None\
-		# self.__stackNum = []
-		# self.__stackOper = []
+		self.__res = None
 		if not self.__validation(exc):
 			return
-		self.__getExpression(exc)
-		# self.__counting(self.__getExpression(exc))
-		
-
-
-
-
-
+		self.__counting(self.__getExpression(exc))
 	def __getExpression(self, exc):
 		# Search complexNum and numbers	# (\d+(?:\.\d+)?(?:[\+\-])?(?:\d+(?:\.\d+)?)?[iI])|(\d+(?:\.\d+)?)
 										# ((?:\d+(?:\.\d+)?(?:[\+\-])?(?:(?:\-)?\d+(?:\.\d+)?)?[iI])|(?:\d+(?:\.\d+)?))
+										# ((?:\d+(?:\.\d+)?(?:[\+\-])?(?:(?:\-)?\d+(?:\.\d+)?)?[iI])|(?:(?:(?<=[\(\*\/\%\^\+])\-)?\d+(?:\.\d+)?))
 
 		# Search operators	# ([\+\-\*\/\^\%\(\)](?!\d+(?:\.\d+)?[iI]))
 							# ([\+\*\/\^\%\(\)]|([\-](?<=\()))
@@ -25,89 +18,67 @@ class Calculator:
 							# ((?<![\(\*\/\%\^\+])[\-](?!\d+(?:\.\d+)?[iI])|[\+\/\*\^\%\(\)])
 
 		# 10+-5.5+-5+(-48-42)+5^-2-42+10.2i
-		numbers = re.findall(r'((?:\d+(?:\.\d+)?(?:[\+\-])?(?:(?:\-)?\d+(?:\.\d+)?)?[iI])|(?:(?:(?<=[\(\*\/\%\^\+])\-)?\d+(?:\.\d+)?))', exc)
-		operators = re.findall(r'((?<![\(\*\/\%\^\+])[\-](?!\d+(?:\.\d+)?[iI])|[\+\/\*\^\%\(\)])', exc)
+		parcExc = re.findall(r'((?:\d+(?:\.\d+)?(?:[\+\-])?(?:(?:\-)?\d+(?:\.\d+)?)?[iI])|(?:(?:(?<=[\(\*\/\%\^\+])\-)?\d+(?:\.\d+)?)|(?<![\(\*\/\%\^\+])[\-](?!\d+(?:\.\d+)?[iI])|[\+\/\*\^\%\(\)])', exc)
+		numbers = []# re.findall(r'((?:\d+(?:\.\d+)?(?:[\+\-])?(?:(?:\-)?\d+(?:\.\d+)?)?[iI])|(?:(?:(?<=[\(\*\/\%\^\+])\-)?\d+(?:\.\d+)?))', exc)
+		operators = []# re.findall(r'((?<![\(\*\/\%\^\+])[\-](?!\d+(?:\.\d+)?[iI])|[\+\/\*\^\%\(\)])', exc)
 		output = []
-		print(numbers, operators)
-	# def __getExpression(self, exc):
-	# 	operStack = []
-	# 	i = 0
-	# 	lenth = len(exc)
-	# 	output = ''
-	# 	while i < lenth:
-	# 		if exc[i].isdigit():
-	# 			num = ''
-	# 			while i < lenth and (exc[i].isdigit() or exc[i] == '.'):
-	# 				output += exc[i]
-	# 				i += 1
-	# 			output += ' '
-	# 			i -= 1
-	# 		if self.__isOperator(exc[i]):
-	# 			if exc[i] == '(':
-	# 				operStack.append(exc[i])
-	# 			elif exc[i] == ')':
-	# 				s = operStack.pop()
-	# 				while s != '(':
-	# 					output += s + ' '
-	# 					s = operStack.pop()
-	# 			else:
-	# 				if len(operStack) > 0:
-	# 					if self.__getPriority(exc[i]) <= self.__getPriority(operStack[-1]):
-	# 						output += operStack.pop()
-	# 				operStack.append(exc[i])
-	# 		i += 1
-	# 	while len(operStack) > 0:
-	# 		output += operStack.pop() + ' '
-	# 	print(output)
-	# 	return output
 
-
-
+		for i, val in enumerate(parcExc):
+			if self.__isOperator(val):
+				if val == '(':
+					operators.append(val)
+				elif val == ')':
+					s = operators.pop()
+					while s != '(':
+						output.append(s)
+						s = operators.pop()
+				else:
+					if len(operators):
+						if self.__getPriority(val) <= self.__getPriority(operators[-1]):
+							output.append(operators.pop())
+					operators.append(val)
+			else:
+				output.append(parcExc[i])
+		while operators:
+			output += operators.pop()
+		return output
 
 	def __counting(self, exc):
-		res = 0
-		temp = []
-		i = 0
-		lenth = len(exc)
-		while i < lenth:
-			if exc[i].isdigit() or exc[i] == '.':
-				a = ''
-				while i < lenth and (exc[i].isdigit() or exc[i] == '.'):
-					 a += exc[i]
-					 i += 1
-				temp.append(float(a))
-				i -= 1
-			elif self.__isOperator(exc[i]):
-				a = temp.pop()
-				if not len(temp):
-					b = 0
-				else:
-					b = temp.pop()
+		res = ComplexNum(0, 0)
+		stk = []
+		exc.reverse()
+		while exc:
+			op = exc.pop()
+			if self.__isOperator(op):
+				print(stk)
+				if op == '+':
+					tmp = float(stk.pop()) + float(stk.pop())
+				elif op == '-':
+					tmp = float(stk.pop()) - float(stk.pop())
+				elif op == '*':
+					tmp = float(stk.pop()) * float(stk.pop())
+				elif op == '/':
+					tmp = float(stk.pop()) / float(stk.pop())
+				elif op == '^':
+					tmp = float(stk.pop()) ** float(stk.pop())
+				elif op == '%':
+					tmp = float(stk.pop()) % float(stk.pop())
+				stk.append(tmp)
+			else:
+				stk.append(op)
+		print("{0:g}".format(stk.pop()))
 
-				if exc[i] == '+':
-					res = float(b) + float(a)
-				elif exc[i] == '-':
-					res = float(b) - float(a)
-				elif exc[i] == '*':
-					res = float(b) * float(a)
-				elif exc[i] == '/':
-					res = float(b) / float(a)
-				elif exc[i] == '^':
-					res = float(b) ** float(a)
-				elif exc[i] == '%':
-					res = float(b) % float(a)
-				temp.append(res)
-				# print("{0} {2} {1}".format(b, a, exc[i]))
-			i += 1
-		self.__res = temp.pop()
-		print("{0:g}".format(self.__res))
-	def __isDelimeter(self):
-		pass
 	def __isOperator(self, c):
-		exc = re.search(r'[+-/*^()%]', c)
-		if exc:
-			return True
-		return False
+		return {
+			'(': 1,
+			')': 1,
+			'+': 3,
+			'-': 3,
+			'*': 4,
+			'/': 4,
+			'%': 4,
+			'^': 5,
+		}.get(c, False)
 	def __getPriority(self, c):
 		return {
 			'(': 0,
