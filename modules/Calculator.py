@@ -9,16 +9,18 @@ class Calculator:
 		self.__counting(self.__getExpression(exc))
 	def __getExpression(self, exc):
 		# Search complexNum and numbers	# (\d+(?:\.\d+)?(?:[\+\-])?(?:\d+(?:\.\d+)?)?[iI])|(\d+(?:\.\d+)?)
-										# ((?:\d+(?:\.\d+)?(?:[\+\-])?(?:(?:\-)?\d+(?:\.\d+)?)?[iI])|(?:\d+(?:\.\d+)?))
-										# ((?:\d+(?:\.\d+)?(?:[\+\-])?(?:(?:\-)?\d+(?:\.\d+)?)?[iI])|(?:(?:(?<=[\(\*\/\%\^\+])\-)?\d+(?:\.\d+)?))
+		# ((?:\d+(?:\.\d+)?(?:[\+\-])?(?:(?:\-)?\d+(?:\.\d+)?)?[iI])|(?:\d+(?:\.\d+)?))
+		# ((?:\d+(?:\.\d+)?(?:[\+\-])?(?:(?:\-)?\d+(?:\.\d+)?)?[iI])|(?:(?:(?<=[\(\*\/\%\^\+])\-)?\d+(?:\.\d+)?))
+		# ((?:(?:(?:\-)?\d+(?:\.\d+)?)?[iI])|(?:(?:(?<=[\(\*\/\%\^\+])\-)?\d+(?:\.\d+)?))
 
 		# Search operators	# ([\+\-\*\/\^\%\(\)](?!\d+(?:\.\d+)?[iI]))
-							# ([\+\*\/\^\%\(\)]|([\-](?<=\()))
-							# (?<![\(\*\/\%\^\+])[\-]
-							# ((?<![\(\*\/\%\^\+])[\-](?!\d+(?:\.\d+)?[iI])|[\+\/\*\^\%\(\)])
+		# ([\+\*\/\^\%\(\)]|([\-](?<=\()))
+		# (?<![\(\*\/\%\^\+])[\-]
+		# ((?<![\(\*\/\%\^\+])[\-](?!\d+(?:\.\d+)?[iI]))
+		# (?<![\(\*\/\%\^\+])[\-](?!\d+(?:\.\d+)?[iI])|[\+\/\*\^\%\(\)]|
 
 		# 10+-5.5+-5+(-48-42)+5^-2-42+10.2i
-		parcExc = re.findall(r'((?:\d+(?:\.\d+)?(?:[\+\-])?(?:(?:\-)?\d+(?:\.\d+)?)?[iI])|(?:(?:(?<=[\(\*\/\%\^\+])\-)?\d+(?:\.\d+)?)|(?<![\(\*\/\%\^\+])[\-](?!\d+(?:\.\d+)?[iI])|[\+\/\*\^\%\(\)])', exc)
+		parcExc = re.findall(r'((?<![\(\*\/\%\^\+])[\-](?!\d+(?:\.\d+)?[iI])|[\+\/\*\^\%\(\)]|(?:(?:(?:\-)?\d+(?:\.\d+)?)?[iI])|(?:(?:(?<=[\(\*\/\%\^\+])\-)?\d+(?:\.\d+)?))', exc)
 		numbers = []# re.findall(r'((?:\d+(?:\.\d+)?(?:[\+\-])?(?:(?:\-)?\d+(?:\.\d+)?)?[iI])|(?:(?:(?<=[\(\*\/\%\^\+])\-)?\d+(?:\.\d+)?))', exc)
 		operators = []# re.findall(r'((?<![\(\*\/\%\^\+])[\-](?!\d+(?:\.\d+)?[iI])|[\+\/\*\^\%\(\)])', exc)
 		output = []
@@ -50,23 +52,46 @@ class Calculator:
 		while exc:
 			op = exc.pop()
 			if self.__isOperator(op):
-				print(stk)
+				# print(stk, op)
+				a = stk.pop()
+				b = stk.pop()
+				if re.findall('[iI]', a):
+					a = ComplexNum(a)
+				else:
+					a = float(a)
+				if re.findall('[iI]', b):
+					b = ComplexNum(b)
+				else:
+					b = float(b)
 				if op == '+':
-					tmp = float(stk.pop()) + float(stk.pop())
+					tmp = b + a
 				elif op == '-':
-					tmp = float(stk.pop()) - float(stk.pop())
+					tmp = b - a
 				elif op == '*':
-					tmp = float(stk.pop()) * float(stk.pop())
+					tmp = b * a
 				elif op == '/':
-					tmp = float(stk.pop()) / float(stk.pop())
+					try:
+						# print("Here", b, a)
+						tmp = b / a
+					except:
+						print("Error: division by zero")
+						return 
 				elif op == '^':
-					tmp = float(stk.pop()) ** float(stk.pop())
+					tmp = b ** a
 				elif op == '%':
-					tmp = float(stk.pop()) % float(stk.pop())
-				stk.append(tmp)
+					try:
+						tmp = b % a
+					except:
+						print("Error: module by zero")
+						return 
+				stk.append(str(tmp))
 			else:
 				stk.append(op)
-		print("{0:g}".format(stk.pop()))
+		res = stk.pop()
+		if type(res) is float:
+			print("{0:g}".format(res))
+		else:
+			print("{0}".format(res))
 
 	def __isOperator(self, c):
 		return {

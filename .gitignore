@@ -3,5 +3,6 @@ bin
 lib
 lib64
 models/__*
+modules/__pycache__/ComplexNum.cpython-35.pyc
 share
 pyvenv.cfg

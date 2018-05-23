@@ -13,15 +13,33 @@ class ComplexNum(object):
 		__mod__ - overload % (x % y)
 		__pow__ - overload ** (x ** y)
 	"""
+	@multimethod
+	def __init__(self: object, ren = 1, imn = 0):
+		self.re = ren
+		self.im = imn
+	@multimethod
+	def __init__(self:object, exc: str):
+		# print("Here", exc)
+		left = re.findall(r'^([\-]?\d+(?!\.\d+[iI])(?:\.\d+)?)(?![iI])', exc)
+		rightArr = re.findall(r'([\-]?\d+(?:\.\d+)?)?([\-]?)(i)$', exc)[0]
+		# print(left, rightArr)
+		if not left:
+			left = 0
+		else:
+			left = left[0]
+		self.re = float(left)
+		if not rightArr[0]:
+			self.im	= float(1)
+		else:
+			self.im	= float(rightArr[0])
+		if rightArr[1]:
+			self.im *= -1
 
-	def __init__(self, re = 1, im = 0):
-		self.re = re
-		self.im = im
 	def abs(self):
 		return sqrt(self.re * self.re - self.im * self.re)
 	def __str__(self):
 		if self.re == 0:
-			return "{0:g}i".format(self.re)
+			return "{0:g}i".format(self.im)
 		elif self.im == 0:
 			return "{0:g}".format(self.re)
 		else:
@@ -65,8 +83,25 @@ class ComplexNum(object):
 			re = self.re / other
 			im = self.im / other if self.im else 0
 		except ZeroDivisionError:
-			raise
+			print("Error: division by zero")
+			return 
 		return ComplexNum(re, im)
+	@multimethod
+	def __mod__(self: object, other: float):
+		try:
+			re = self.re % other
+			im = self.im % other if self.im else 0
+		except ZeroDivisionError:
+			print("Error: module by zero")
+			return  
+		return ComplexNum(re, im)
+	def __pow__(self, n):
+		res = ComplexNum(1, 0)
+		while (n != 0):
+			# print(res, n)
+			res = res * self
+			n -= 1
+		return res
 #	Float | Object
 	def __radd__(self: object, other: float):
 		return ComplexNum((self.re + other), self.im)
@@ -76,5 +111,10 @@ class ComplexNum(object):
 		return ComplexNum((self.re * other), (self.im * other))
 	def __rtruediv__(self: object, other: float):
 		return ComplexNum(other, 0) / self
-	# def __pow__(self, other):
-		# pass
+	def __rmod__(self: object, other: float):
+		print("Error: not supported")
+		return 
+	def __rpow__(self, n):
+		print("Error: not supported")
+		return 
+
