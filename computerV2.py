@@ -6,6 +6,7 @@ import re
 
 from modules.Calculator import *
 from modules.ComplexNum import *
+from modules.Matrix import *
 
 class General:
 	def __init__(self):
@@ -23,13 +24,18 @@ class General:
 		print("\nThx for wasted time!")
 	def __pars(self):
 		self.__comand = re.sub(r'\s', '', self.__comand).lower()
-		lst = Calculator(self.__comand)
+		# Global
+		# lst = Calculator(self.__comand)
+		# Complex Number
 		# tmp2 = ComplexNum(float(self.__comand), 0)
 		# print("orig = {0} my = {1}".format(
 		# 	(complex(float(self.__comand), 2.3) / complex(1,3)),
 		# 	(ComplexNum(float(self.__comand), 2.3) / ComplexNum(1,3))
 		# 	))
-
+		# Matrix
+		lol = Matrix(self.__comand)
+		# lol = Matrix([[10]]) + Matrix([[20]])
+		print(lol * float(5))
 def main():
 	g = General()
 	g.start()
