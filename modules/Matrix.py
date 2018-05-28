@@ -3,6 +3,7 @@ from multimethod import multimethod
 
 class Matrix(object):
 	"""docstring for Matrix"""
+# INIT STR
 	@multimethod
 	def __init__(self: object, arg: str):
 		self.i = len(re.findall(r'\[', arg)) - 1
@@ -17,8 +18,9 @@ class Matrix(object):
 				col.append(float(tmp[k]))
 				k += 1
 			self.arr.append(col)
-		# print(self.i, self.j, self.arr)
+		# print(self.i, self.j, self.arr, arg)
 		# print(len(self.arr))
+# INIT ARRAY
 	@multimethod
 	def __init__(self: object, arg: object):
 		self.i = len(arg)
@@ -29,6 +31,7 @@ class Matrix(object):
 			return
 		self.arr = arg
 		# print(self.i, self.j, self.arr)
+# STR
 	def __str__(self):
 		res = ''
 		for i in range(0,int(self.i)):
@@ -41,6 +44,7 @@ class Matrix(object):
 			if i < self.i - 1:
 				res += '\n'
 		return res
+# ADD
 	def __add__(self, other):
 		if self.i == other.i and self.j == other.j:
 			newArr = []
@@ -50,7 +54,10 @@ class Matrix(object):
 					col.append(self.arr[i][j] + other.arr[i][j])
 				newArr.append(col)
 			return Matrix(newArr)
+		else:
+			print("Error: not supported")
 		return
+# SUB
 	def __sub__(self, other):
 		if self.i == other.i and self.j == other.j:
 			newArr = []
@@ -60,7 +67,10 @@ class Matrix(object):
 					col.append(self.arr[i][j] - other.arr[i][j])
 				newArr.append(col)
 			return Matrix(newArr)
+		else:
+			print("Error: not supported")
 		return
+# MUL FLOAT
 	@multimethod
 	def __mul__(self: object, k: float):
 		# if self.i != other.j and self.j != other.i:
@@ -73,3 +83,9 @@ class Matrix(object):
 				col.append(self.arr[i][j] * k)
 			newArr.append(col)
 		return Matrix(newArr)
+# MUL OBJEXT
+	@multimethod
+	def __mul__(self: object, k: object):
+		print("Error: not supported")
+		return
+

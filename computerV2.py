@@ -33,9 +33,22 @@ class General:
 		# 	(ComplexNum(float(self.__comand), 2.3) / ComplexNum(1,3))
 		# 	))
 		# Matrix
-		lol = Matrix(self.__comand)
+		left = re.findall(r'(.+)(?=[\+\-\*\/](?=\[))', self.__comand)[0]
+		right = re.findall(r'(?<=(?<=\])[\-\+\/\*])(.+)', self.__comand)[0]
+		op = re.findall(r'(?<=\])([\-\+\/\*])(?=\[)', self.__comand)[0]
+		A = Matrix(left)
+		B = Matrix(right)
+		C = None
+		if op == '+':
+			C = A+B
+		elif op == '-':
+			C = A-B
+		elif op == '*':
+			C = A*B
+		elif op == '/':
+			C = A/B
 		# lol = Matrix([[10]]) + Matrix([[20]])
-		print(lol * float(5))
+		print(C)
 def main():
 	g = General()
 	g.start()
